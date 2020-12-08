@@ -36,7 +36,7 @@ public class JsonHandler {
     }
 
     public static boolean validateTestCaseStructure(String pathToFile) throws IOException {
-        String jsonSchemaString = new String(Files.readAllBytes(Paths.get("src/main/resources/TestcaseStructure-schema.json")));
+        String jsonSchemaString = new String(Files.readAllBytes(Paths.get("input_validation/TestcaseStructure-schema.json")));
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         String testCasesStructureString = new String(Files.readAllBytes(Paths.get(pathToFile)));
         JSONObject testCaseStructure = new JSONObject(testCasesStructureString);
@@ -52,7 +52,7 @@ public class JsonHandler {
     }
 
     public static boolean validateValues(String pathToFile) throws IOException {
-        String jsonSchemaString = new String(Files.readAllBytes(Paths.get("src/main/resources/Values-schema.json")));
+        String jsonSchemaString = new String(Files.readAllBytes(Paths.get("input_validation/Values-schema.json")));
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         String valuesString = new String(Files.readAllBytes(Paths.get(pathToFile)));
         JSONObject values = new JSONObject(valuesString);
