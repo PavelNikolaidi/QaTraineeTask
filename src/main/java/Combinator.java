@@ -3,10 +3,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Combinator {
-    public static JSONObject combineStructureAndValues(JSONObject testcaseStructure, JSONArray values) {
+
+    /**
+     * Applies values from JSONArray on testCaseStructure JSONObject.
+     * @param testCaseStructure
+     * @param values
+     * @return resulting JSONObject structureWithValues
+     */
+    public static JSONObject combineStructureAndValues(JSONObject testCaseStructure, JSONArray values) {
         JSONObject structureWithValues = new JSONObject();
-        for (int i = 0; i < testcaseStructure.getJSONArray("params").length(); i++) {
-            JSONObject currentArrayElement = testcaseStructure.getJSONArray("params").getJSONObject(i);
+        for (int i = 0; i < testCaseStructure.getJSONArray("params").length(); i++) {
+            JSONObject currentArrayElement = testCaseStructure.getJSONArray("params").getJSONObject(i);
             try {
                 currentArrayElement.get("values");
             } catch (JSONException jsonException) {

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class JsonHandler {
+
     /**
      * Reads JSONArray of params from TestCaseStructure.json file.
      *
@@ -39,6 +40,12 @@ public class JsonHandler {
         return jsonArray;
     }
 
+    /**
+     * Validates TestCaseStructure.json file against pre-defined JSON Schema.
+     * @param pathToFile
+     * @return
+     * @throws IOException if TestCaseStructure.json is not available
+     */
     public static boolean validateTestCaseStructure(String pathToFile) throws IOException {
         String jsonSchemaString = "";
         try {
@@ -60,7 +67,7 @@ public class JsonHandler {
         JSONObject testCaseStructure = new JSONObject();
         try {
             testCaseStructure = new JSONObject(testCasesStructureString);
-        } catch (JSONException e) {}
+        } catch (JSONException ignored) {}
         Schema schema = SchemaLoader.load(jsonSchema);
         try {
             schema.validate(testCaseStructure);
@@ -71,6 +78,12 @@ public class JsonHandler {
 
     }
 
+    /**
+     * Validates Values.json file against pre-defined JSON Schema.
+     * @param pathToFile
+     * @return
+     * @throws IOException if Values.json is not available
+     */
     public static boolean validateValues(String pathToFile) throws IOException {
         String jsonSchemaString = "";
         try {
@@ -92,7 +105,7 @@ public class JsonHandler {
         JSONObject values = new JSONObject();
         try {
             values = new JSONObject(valuesString);
-        } catch (JSONException e) {}
+        } catch (JSONException ignored) {}
         Schema schema = SchemaLoader.load(jsonSchema);
         try {
             schema.validate(values);
@@ -102,6 +115,10 @@ public class JsonHandler {
         return true;
     }
 
+    /**
+     * Writes JSONObject structureWithValues to StructureWithValues.json file.
+     * @param structureWithValues
+     */
     public static void writeStructureWithValues(JSONObject structureWithValues) {
 
         String structureWithValuesString = structureWithValues.toString(2);
@@ -135,6 +152,9 @@ public class JsonHandler {
         }
     }
 
+    /**
+     * Generates and writes Error.json file.
+     */
     public static void writeErrorJson() {
         if (Files.exists(Paths.get("Error.json"))) {
             try {
