@@ -2,6 +2,7 @@ import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -38,13 +39,14 @@ public class JsonHandler {
         return jsonArray;
     }
 
-    public static boolean validateTestCaseStructure(String pathToFile) {
+    public static boolean validateTestCaseStructure(String pathToFile) throws IOException {
         String jsonSchemaString = "";
         try {
             jsonSchemaString = new String(Files.readAllBytes(Paths.get("input_validation/TestcaseStructure-schema.json")));
         } catch (IOException e) {
             System.err.println("Can't read input_validation/TestcaseStructure-schema.json");
             e.printStackTrace();
+            throw e;
         }
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         String testCasesStructureString = "";
@@ -53,9 +55,12 @@ public class JsonHandler {
         } catch (IOException e) {
             System.err.println("Can't read " + pathToFile);
             e.printStackTrace();
+            throw e;
         }
-        JSONObject testCaseStructure = new JSONObject(testCasesStructureString);
-
+        JSONObject testCaseStructure = new JSONObject();
+        try {
+            testCaseStructure = new JSONObject(testCasesStructureString);
+        } catch (JSONException e) {}
         Schema schema = SchemaLoader.load(jsonSchema);
         try {
             schema.validate(testCaseStructure);
@@ -66,13 +71,14 @@ public class JsonHandler {
 
     }
 
-    public static boolean validateValues(String pathToFile) {
+    public static boolean validateValues(String pathToFile) throws IOException {
         String jsonSchemaString = "";
         try {
             jsonSchemaString = new String(Files.readAllBytes(Paths.get("input_validation/Values-schema.json")));
         } catch (IOException e) {
             System.err.println("Can't read input_validation/Values-schema.json");
             e.printStackTrace();
+            throw e;
         }
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         String valuesString = "";
@@ -81,9 +87,12 @@ public class JsonHandler {
         } catch (IOException e) {
             System.err.println("Can't read " + pathToFile);
             e.printStackTrace();
+            throw e;
         }
-        JSONObject values = new JSONObject(valuesString);
-
+        JSONObject values = new JSONObject();
+        try {
+            values = new JSONObject(valuesString);
+        } catch (JSONException e) {}
         Schema schema = SchemaLoader.load(jsonSchema);
         try {
             schema.validate(values);
@@ -140,7 +149,7 @@ public class JsonHandler {
         JSONObject message = new JSONObject();
         message.put("message","Input files are incorrect.");
         error.put("error", message);
-        String errorString = error.toString();
+        String errorString = error.toString(2);
         try {
             File outputFile = new File("Error.json");
             if (outputFile.createNewFile()) {
