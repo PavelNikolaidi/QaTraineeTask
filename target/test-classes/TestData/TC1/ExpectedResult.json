@@ -1,0 +1,18 @@
+{
+   "params":[
+      {
+         "id":59,
+         "title":"testcaseResult",
+         "value":"Pass",
+         "values": [
+         	{
+         		"id":352,
+         		"title": "Pass"
+         	},{
+         		"id":353,
+         		"title": "Fail"
+         	}
+         ]
+      }
+   ]
+}

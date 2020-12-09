@@ -1,4 +1,10 @@
+import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Tests {
     /*
@@ -15,10 +21,69 @@ public class Tests {
             Values.json
      4. Если для объекта с id из из Values.json нет соотвествующего объекта в массиве params в TestcaseStructure.json,
         то значение из этого объета игнорируется
+     5. При отсутствии одного из файлов выдается ошибка в консоль.
      */
 
-
+    /**
+     * Test case #1: Входные файлы в корректном формате, есть массив values
+     */
     @Test
-    public void testCase01() {
+    public void testCase01() throws IOException {
+        int testCaseId = 1;
+
+        copyTestData(testCaseId);
+        Main.main(null);
+
+        Assert.assertTrue(isResultJsonAsExpected(testCaseId));
     }
+    /**
+     * Test case #2: Входные файлы в корректном формате, нет массива values
+     */
+    @Test
+    public void testCase02() throws IOException {
+        int testCaseId = 2;
+
+        copyTestData(testCaseId);
+        Main.main(null);
+
+        Assert.assertTrue(isResultJsonAsExpected(testCaseId));
+    }
+
+    private void copyTestData(int testCaseId) {
+        try {
+            if (Files.deleteIfExists(Paths.get("TestcaseStructure.json")) && Files.deleteIfExists(Paths.get("Values.json"))); {
+                Files.copy(Paths.get(("src/test/resources/TestData/TC"+ testCaseId + "/TestcaseStructure.json")),
+                        Paths.get("TestcaseStructure.json"));
+                Files.copy(Paths.get(("src/test/resources/TestData/TC"+ testCaseId + "/Values.json")),
+                        Paths.get("Values.json"));
+            }
+        } catch (IOException e) {
+            System.err.println("Can't copy test data.");
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isResultJsonAsExpected(int testCaseId) {
+        String file1 = "";
+        String file2 = "";
+        try {
+            file1 = new String(Files.readAllBytes(Paths.get("StructureWithValues.json")));
+        } catch (IOException e) {
+            System.err.println("Can't read StructureWithValues.json");
+            e.printStackTrace();
+        }
+        try {
+            file2 = new String(Files.readAllBytes(Paths.get("src/test/resources/TestData/TC"+ testCaseId + "/ExpectedResult.json")));
+        } catch (IOException e) {
+            System.err.println("Can't read ExpectedResult.json");
+            e.printStackTrace();
+        }
+        JSONObject actualJson = new JSONObject(file1);
+        JSONObject expectedJson = new JSONObject(file2);
+        if (actualJson.similar(expectedJson)) {
+            return true;
+        }
+        return false;
+    }
+
 }
